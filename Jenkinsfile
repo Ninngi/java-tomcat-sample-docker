@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build Application') {
             steps {
-                sh 'mvn -f /pom.xml clean package'
+                sh 'mvn -f java-tomcat-sample/pom.xml clean package'
             }
             post {
                 success {
@@ -12,12 +12,17 @@ pipeline {
                 }
             }
         }
-
-        stage('Create Tomcat Docker Image'){
-            steps {
-                sh "pwd"
-                sh "ls -a"
-                sh "docker build . -t tomcatsamplewebapp:${env.BUILD_ID}"
+        stage('Deploy in Staging Environment'){
+            steps{
+                build job: 'DeployAppStagingEnv'
+            }
+        }
+        stage('Deploy to Production'){
+            steps{
+                timeout(time:5, unit:'DAYS'){
+                    input message:'Approve PRODUCTION Deployment?'
+                }
+                build job: 'DeployApplicationProductionEnv'
             }
         }
     }
