@@ -14,8 +14,8 @@ pipeline {
         }
         stage('Create Tomcat Docker Image'){
             steps {
-                sh "ls -lrth /var/run/docker.sock"
-                sh "chmod 666 /var/run/docker.sock"
+                // sh "ls -lrth /var/run/docker.sock"
+                // sh "chmod 666 /var/run/docker.sock"
                 sh "pwd"
                 sh "ls -a"
                 sh "docker build . -t tomcatsamplewebapp:${env.BUILD_ID}"
